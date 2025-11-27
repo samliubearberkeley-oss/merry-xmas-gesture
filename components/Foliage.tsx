@@ -7,7 +7,7 @@ interface FoliageProps {
 }
 
 export const Foliage: React.FC<FoliageProps> = ({ mode }) => {
-  const count = 250; // 减少树叶数量
+  const count = 250; // Foliage particle count
   const meshRef = useRef<THREE.Points>(null);
   const materialRef = useRef<THREE.ShaderMaterial>(null);
 
@@ -18,12 +18,12 @@ export const Foliage: React.FC<FoliageProps> = ({ mode }) => {
     const colors = new Float32Array(count * 3);
     const sizes = new Float32Array(count);
 
-    // 与 Ornaments 完全一致的锥体参数
+    // Cone parameters matching Ornaments
     const TREE_HEIGHT = 16;
     const TREE_BASE_RADIUS = 5.5;
     const TREE_HEIGHT_OFFSET = -8;
 
-    // 鲜艳的绿色调色板
+    // Vibrant green color palette
     const palette = [
       new THREE.Color("#2E7D32"),
       new THREE.Color("#388E3C"),
@@ -58,7 +58,7 @@ export const Foliage: React.FC<FoliageProps> = ({ mode }) => {
       chaos[i * 3 + 1] = cr * Math.sin(phi) * Math.sin(theta) + 5;
       chaos[i * 3 + 2] = cr * Math.cos(phi);
 
-      // 初始位置 = chaos
+      // Initial position = chaos
       positions[i * 3] = chaos[i * 3];
       positions[i * 3 + 1] = chaos[i * 3 + 1];
       positions[i * 3 + 2] = chaos[i * 3 + 2];
@@ -85,7 +85,7 @@ export const Foliage: React.FC<FoliageProps> = ({ mode }) => {
     };
   }, []);
 
-  // 动画：在 chaos 和 target 之间插值
+  // Animation: interpolate between chaos and target
   const progressRef = useRef(0);
 
   useFrame((state, delta) => {
@@ -98,7 +98,7 @@ export const Foliage: React.FC<FoliageProps> = ({ mode }) => {
       delta * 2.5
     );
 
-    // 更新位置
+    // Update positions
     const positions = geometry.attributes.position.array as Float32Array;
     const t = progressRef.current;
 
@@ -108,7 +108,7 @@ export const Foliage: React.FC<FoliageProps> = ({ mode }) => {
       positions[i3 + 1] = THREE.MathUtils.lerp(chaosPositions[i3 + 1], targetPositions[i3 + 1], t);
       positions[i3 + 2] = THREE.MathUtils.lerp(chaosPositions[i3 + 2], targetPositions[i3 + 2], t);
 
-      // 添加轻微风吹效果
+      // Add subtle wind effect
       const windAmp = THREE.MathUtils.lerp(0.3, 0.02, t);
       const time = state.clock.elapsedTime;
       positions[i3] += Math.sin(time * 2 + positions[i3 + 1] * 0.5) * windAmp;
@@ -144,7 +144,7 @@ export const Foliage: React.FC<FoliageProps> = ({ mode }) => {
       
       float alpha = 1.0 - smoothstep(0.3, 1.0, r);
       
-      // 简单光照
+      // Simple lighting
       float light = 0.7 + 0.3 * (1.0 - r);
       vec3 finalColor = vColor * light;
       
